@@ -8,6 +8,7 @@ import {
   Image
 } from 'react-native';
 
+// TODO - Get data from RSS
 const dataFromServer = [
   {
     id: '1',

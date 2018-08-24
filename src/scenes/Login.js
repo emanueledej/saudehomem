@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import logo from '../../saudedohomem.png';
 
+// TODO - ADD LOGIN WITH FACEBOOK
 class Login extends Component {
   render() {
     return (
@@ -26,6 +27,10 @@ class Login extends Component {
         <Button
           onPress={() => this.props.navigation.navigate('Home')}
           title="Botão do facebook - Conectar"
+        />
+        <Button
+          onPress={() => this.props.navigation.navigate('Home')}
+          title="Não conectar agora"
         />
       </View>
     );
