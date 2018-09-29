@@ -5,6 +5,7 @@ import Login from '../scenes/Login';
 import Home from '../scenes/Home';
 import Details from '../scenes/Details';
 import Exams from '../scenes/Exams';
+import Info from '../scenes/Info';
 
 const TabNavigator = createBottomTabNavigator({
   Home: {
@@ -27,6 +28,19 @@ const TabNavigator = createBottomTabNavigator({
       tabBarIcon: ({ _, tintColor }) => (
         <Icon
           name="user-md"
+          color={tintColor}
+          size={26}
+        />
+      ),
+    }
+  },
+  Info: {
+    screen: Info,
+    navigationOptions: {
+      title: 'Sobre',
+      tabBarIcon: ({ _, tintColor }) => (
+        <Icon
+          name="info-circle"
           color={tintColor}
           size={26}
         />
