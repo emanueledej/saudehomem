@@ -26,11 +26,7 @@ class Login extends Component {
         <Text style={styles.welcome}>Saúde do Homem</Text>
         <Button
           onPress={() => this.props.navigation.navigate('Home')}
-          title="Botão do facebook - Conectar"
-        />
-        <Button
-          onPress={() => this.props.navigation.navigate('Home')}
-          title="Não conectar agora"
+          title="Acessar sem autenticar"
         />
       </View>
     );
