@@ -1,99 +1,85 @@
 import React from 'react';
 import {
-  Platform,
-  View,
   Text,
   FlatList,
-  TouchableOpacity,
-  Image
+  View,
 } from 'react-native';
-
-// TODO - Get data from RSS
-const dataFromServer = [
-  {
-    id: '1',
-    title: 'Algum titulo 1',
-    content: 'Algum conteúdo aleatório aqui, que não me diz nada',
-    date: Date.now(),
-    minAge: 12,
-    maxAge: 23,
-  },
-  {
-    id: '2',
-    title: 'Algum titulo 2',
-    content: 'Algum conteúdo aleatório aqui, que não me diz nada',
-    date: Date.now(),
-    minAge: 25,
-    maxAge: 40,
-    image: 'https://www.valordoconhecimento.com.br/blog/wp-content/uploads/2016/04/diamundialdasa%C3%BAde.png',
-  },
-  {
-    id: '3',
-    title: 'Algum titulo 3',
-    content: 'Algum conteúdo aleatório aqui, que não me diz nada',
-    date: Date.now(),
-    minAge: 1,
-    maxAge: 64,
-  }
-];
+import * as rssParser from 'react-native-rss-parser';
+import Card from '../components/Card';
+import Header from '../components/Header';
 
 class Home extends React.PureComponent {
-  renderItem = ({ item }) => (
-    <TouchableOpacity
-      key={`i-${item.id}`}
-      onPress={() => this.props.navigation.navigate('Details')}
-    >
-      <View
-        key={`item_${item.id}`}
-        style={{
-          backgroundColor: 'white',
-          borderColor: '#ccc',
-          borderWidth: 1,
-          ...Platform.select({
-            ios: {
-              shadowColor: 'rgba(0,0,0, .2)',
-              shadowOffset: { height: 0, width: 0 },
-              shadowOpacity: 1,
-              shadowRadius: 1,
-            },
-            android: {
-              elevation: 1,
-            },
-          }),
-          padding: 15,
-          margin: 15,
-          marginBottom: 0,
-        }}
-      >
-        { item.image && (
-          <Image
-            source={{ uri: item.image }}
-            style={{
-              alignSelf: 'center',
-              width: 340,
-              height: 100,
-              margin: 5,
-              resizeMode: 'stretch',
-            }}
-          />
-        )}
-        <Text style={{ fontSize: 23 }}>
-          {item.title}
-        </Text>
-        <Text style={{ fontSize: 18 }}>
-          {item.content}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+  state = {
+    posts: [],
+    loading: false,
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true })
+    fetch('https://saudedohomemteste.wordpress.com/feed/')
+      .then(response => response.text())
+      .then(data => rssParser.parse(data))
+      .then((rss) => {
+        this.setState({ posts: rss.items, loading: false });
+      }).finally(() => this.setState({ loading: false }));
+  }
+
+  goToDetails = (item) => this.props.navigation.navigate('Details', item)
+
+  renderItem = ({ item }) => {
+    return (
+      <Card
+        key={`i-${item.title}`}
+        onPress={this.goToDetails}
+        item={item}
+      />
+    );
+  }
 
   render() {
+    const { posts, loading } = this.state;
+    if (loading) return (
+      <View>
+        <Header title={'Ultimas Notícias'} />
+        <View
+          style={{
+            alignItems: 'center',
+            padding: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+            }}
+          >
+            Buscando informações..
+          </Text>
+        </View>
+      </View>
+    );
     return (
       <FlatList
         style={{ flex: 1 }}
-        data={dataFromServer}
+        data={posts}
+        ListHeaderComponent={<Header title={'Ultimas Notícias'} />}
+        ListEmptyComponent={
+          <View
+            style={{
+              alignItems: 'center',
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+              }}
+            >
+              Não encontramos nenhuma notícia. 😢
+            </Text>
+          </View>
+        }
         renderItem={this.renderItem}
-        keyExtractor={(item, _) => `${item.id}`}
+        keyExtractor={(item) => `${item.id}`}
       />
     );
   }
