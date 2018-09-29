@@ -16,7 +16,7 @@ class Card extends React.PureComponent {
 
   render() {
     const { item } = this.props;
-    const imageList = TextUtil.getImageFromHTML(item.image, item.description)
+    const imageList = TextUtil.getImageFromHTML(item.image, item.content, item.description)
     const image = imageList && imageList[0];
     return (
       <TouchableOpacity
@@ -52,7 +52,7 @@ class Card extends React.PureComponent {
                 width: 340,
                 height: 100,
                 margin: 5,
-                resizeMode: 'stretch',
+                resizeMode: 'contain',
               }}
             />
           )}
